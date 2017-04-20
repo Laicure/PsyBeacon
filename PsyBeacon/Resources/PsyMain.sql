@@ -8,7 +8,8 @@ select
 [Process],
 [Start],
 iif(lead([Title]) over (partition by [Username] order by [Start], [Name])='<Start>', Null, [End]) as 'End',
-iif(lead([Title]) over (partition by [Username] order by [Start], [Name])='<Start>', Null, [Duration]) as 'dd:hh:mm:ss'
+iif(lead([Title]) over (partition by [Username] order by [Start], [Name])='<Start>', Null, [Duration]) as 'dd:hh:mm:ss',
+RawSec
 from (
 select
 iif(CHARINDEX('\', [Username])>0, REPLACE(SUBSTRING([Username], CHARINDEX('\', [Username]), LEN([Username])), '\', ''), [Username]) as 'UserName',
@@ -23,7 +24,8 @@ right('0' + rtrim(ElapsedSecs / 86400), 4) + ':' +
 right('0' + rtrim((ElapsedSecs % 86400) / 3600), 2) + ':' +
 right('0' + rtrim((ElapsedSecs % 3600) / 60), 2) + ':' +
 right('0' + rtrim(ElapsedSecs % 60), 2)
-as 'Duration'
+as 'Duration',
+ElapsedSecs as 'RawSec'
 From (
 select
 *,
