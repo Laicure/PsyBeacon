@@ -20,7 +20,7 @@ iif(CHARINDEX('\', [Username])>0, LEFT([Username], CHARINDEX('\', [Username]) - 
 [Start],
 [End],
 --http://www.sqlteam.com/article/working-with-time-spans-and-durations-in-sql-server
-right('0' + rtrim(ElapsedSecs / 86400), 4) + ':' +
+rtrim(ElapsedSecs / 86400) + ':' +
 right('0' + rtrim((ElapsedSecs % 86400) / 3600), 2) + ':' +
 right('0' + rtrim((ElapsedSecs % 3600) / 60), 2) + ':' +
 right('0' + rtrim(ElapsedSecs % 60), 2)
