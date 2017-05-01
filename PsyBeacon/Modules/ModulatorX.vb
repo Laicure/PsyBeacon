@@ -3,7 +3,7 @@
     Friend sqlCon As String = "Integrated Security=False; Data Source=; Initial Catalog=; User ID=; Password="
     Friend Uzer As String = Environment.UserDomainName & "\" & Environment.UserName
     Friend Namm As String = ""
-    Friend MasterHazher As New HashSet(Of String)
+    Friend MasterLiszt As New List(Of String)
 
     Friend ProcessWhiteList() As String = {""}
 #End Region

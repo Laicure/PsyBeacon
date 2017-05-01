@@ -2,14 +2,13 @@
     Dim PrevWinTit As String = Nothing
     Dim Locked As Boolean = False
     Dim dtX As New Data.DataTable
-    Dim pendingCloseBulkCopy As Boolean = False
     Dim LockedElapse As Long = 0
     Dim LockedElapsed As Boolean = False
 
     'Idle Settings (First/Second Idle)
     Dim FIdle As Long = 300
     Dim FIdled As Boolean = False
-    Dim SIdle As Long = 3600
+    Dim SIdle As Long = 7200
     Dim SIdled As Boolean = False
 
     'Generated Files
@@ -45,15 +44,24 @@
         If My.Computer.FileSystem.FileExists(PsyLogs) Then
             Dim FailSafed As String = My.Computer.FileSystem.ReadAllText(PsyLogs)
             If Not String.IsNullOrWhiteSpace(FailSafed) Then
-                For Each fx As String In FailSafed.Split(vbCrLf.ToCharArray)
+                For Each fx As String In FailSafed.Split({vbCrLf}, StringSplitOptions.RemoveEmptyEntries)
                     If Not String.IsNullOrWhiteSpace(fx) Then
-                        MasterHazher.Add(fx)
+                        MasterLiszt.Add(fx)
                     End If
                 Next
-                Dim ClonedHazher As HashSet(Of String) = New HashSet(Of String)(MasterHazher)
+
+                If MasterLiszt.LongCount > 0 Then
+                    Dim MasterFSCount As Integer = MasterLiszt.Count - 1
+                    If MasterLiszt(MasterFSCount).Contains("<End>") Then
+                        My.Computer.FileSystem.DeleteFile(PsyLogs, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
+                        My.Computer.FileSystem.DeleteFile(Starteeed, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
+                    End If
+                End If
+
+                Dim ClonedHazher As HashSet(Of String) = New HashSet(Of String)(MasterLiszt)
                 If Not ClonedHazher.LongCount = 0 Then
-                    MasterHazher.Clear()
-                    MasterHazher.TrimExcess()
+                    MasterLiszt.Clear()
+                    MasterLiszt.TrimExcess()
                     CopyBulk(ClonedHazher)
                 End If
             End If
@@ -65,8 +73,9 @@
                 'Start Log
                 Dim logDate As DateTime = DateTime.UtcNow
                 Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<Start>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.000")
-                MasterHazher.Add(Loggg)
+                MasterLiszt.Add(Loggg)
                 My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
+
                 My.Computer.FileSystem.WriteAllText(Starteeed, "", False)
             End If
         Else
@@ -74,7 +83,6 @@
         End If
 
         'ReVar
-        pendingCloseBulkCopy = False
         FIdled = False
         SIdled = False
 
@@ -89,7 +97,7 @@
 
             Dim logDate As DateTime = DateTime.UtcNow
             Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<PC Locked>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.000")
-            MasterHazher.Add(Loggg)
+            MasterLiszt.Add(Loggg)
             My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
 
             timMain.Enabled = False
@@ -100,7 +108,7 @@
             Locked = False
             Dim logDate As DateTime = DateTime.UtcNow
             Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & IIf(LockedElapsed, "<Start>", "<PC Unlocked>").ToString & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.000")
-            MasterHazher.Add(Loggg)
+            MasterLiszt.Add(Loggg)
             My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
             If LockedElapsed Then
                 My.Computer.FileSystem.WriteAllText(Starteeed, "", False)
@@ -121,7 +129,7 @@
             If Not PrevWinTit = WinTit And Not WinTit = Me.Text And Not (ProcessWhiteList.Contains(WinProc)) Then
                 Dim logDate As DateTime = DateTime.UtcNow
                 Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & WinTit & vbTab & WinProc & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.000")
-                MasterHazher.Add(Loggg)
+                MasterLiszt.Add(Loggg)
                 My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
 
                 PrevWinTit = WinTit
@@ -136,7 +144,7 @@
                     If Not FIdled Then
                         Dim logDate As DateTime = DateTime.UtcNow
                         Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<Idle>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.000")
-                        MasterHazher.Add(Loggg)
+                        MasterLiszt.Add(Loggg)
                         My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
 
                         FIdled = True
@@ -155,9 +163,9 @@
 
     Private Sub timDBHandler_Tick(sender As Object, e As EventArgs) Handles timDBHandler.Tick
         If Not bgUpload.IsBusy Then
-            Dim ClonedHazher As HashSet(Of String) = New HashSet(Of String)(MasterHazher)
+            Dim ClonedHazher As HashSet(Of String) = New HashSet(Of String)(MasterLiszt)
             If Not ClonedHazher.LongCount = 0 Then
-                MasterHazher.ExceptWith(ClonedHazher)
+                MasterLiszt = MasterLiszt.Except(ClonedHazher).ToList
                 timDBHandler.Enabled = False
                 bgUpload.RunWorkerAsync(ClonedHazher)
             End If
@@ -175,7 +183,7 @@
 
             Dim logDate As DateTime = DateTime.UtcNow
             Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<End>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.000")
-            MasterHazher.Add(Loggg)
+            MasterLiszt.Add(Loggg)
             My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
             My.Computer.FileSystem.DeleteFile(Starteeed, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
         End If
@@ -186,58 +194,18 @@
     End Sub
 
     Private Sub bgUpload_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgUpload.RunWorkerCompleted
-        If pendingCloseBulkCopy Then
-            timDBHandler.Enabled = False
-            timMain.Enabled = False
-            timLocked.Enabled = False
-
-            Dim logDate As DateTime = DateTime.UtcNow
-            Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<End>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.000")
-            MasterHazher.Add(Loggg)
-
-            If Not MasterHazher.LongCount = 0 Then
-                CopyBulk(MasterHazher)
-                MasterHazher.Clear()
-                MasterHazher.TrimExcess()
-            End If
-
-            My.Computer.FileSystem.DeleteFile(PsyLogs, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
-            My.Computer.FileSystem.DeleteFile(Starteeed, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
-
-            Environment.Exit(0)
-        Else
-            Dim xRand As New Random
-            timDBHandler.Interval = xRand.Next(420000, 780000)
-            timDBHandler.Enabled = True
-        End If
+        Dim xRand As New Random
+        timDBHandler.Interval = xRand.Next(420000, 780000)
+        timDBHandler.Enabled = True
     End Sub
 
     Private Sub MainX_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        If Not pendingCloseBulkCopy Then
-            If bgUpload.IsBusy Then
-                pendingCloseBulkCopy = True
-                e.Cancel = True
-            Else
-                timDBHandler.Enabled = False
-                timMain.Enabled = False
-                timLocked.Enabled = False
-
-                Dim logDate As DateTime = DateTime.UtcNow
-                Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<End>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.000")
-                MasterHazher.Add(Loggg)
-
-                If Not MasterHazher.LongCount = 0 Then
-                    CopyBulk(MasterHazher)
-                    MasterHazher.Clear()
-                    MasterHazher.TrimExcess()
-                End If
-
-                My.Computer.FileSystem.DeleteFile(PsyLogs, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
-                My.Computer.FileSystem.DeleteFile(Starteeed, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
-
-                Environment.Exit(0)
-            End If
-        End If
+        timDBHandler.Enabled = False
+        timMain.Enabled = False
+        timLocked.Enabled = False
+        Dim logDate As DateTime = DateTime.UtcNow
+        Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<End>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.000")
+        My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
     End Sub
 
     Private Sub CopyBulk(ByVal hazsh As HashSet(Of String))
@@ -245,7 +213,7 @@
             Using conX As New Data.SqlClient.SqlConnection(sqlCon), bulkX As New Data.SqlClient.SqlBulkCopy(sqlCon, Data.SqlClient.SqlBulkCopyOptions.TableLock Or Data.SqlClient.SqlBulkCopyOptions.UseInternalTransaction Or Data.SqlClient.SqlBulkCopyOptions.FireTriggers)
                 bulkX.DestinationTableName = "PsyMain"
                 For Each Strr As String In hazsh
-                    Dim rowStr As String() = Strr.Split(vbTab.ToCharArray)
+                    Dim rowStr As String() = Strr.Split({vbTab}, StringSplitOptions.RemoveEmptyEntries)
                     dtX.Rows.Add(rowStr)
                 Next
 
@@ -259,12 +227,12 @@
                 dtX.Clear()
             End Using
 
-            'clean MasterHazher
-            MasterHazher.ExceptWith(hazsh)
-            MasterHazher.TrimExcess()
+            'clean MasterLiszt
+            MasterLiszt = MasterLiszt.Except(hazsh).ToList
+            MasterLiszt.TrimExcess()
 
             'Update FailSafe
-            Dim Loggg As String = String.Join(vbCrLf, MasterHazher)
+            Dim Loggg As String = String.Join(vbCrLf, MasterLiszt)
             My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, False)
         Catch ex As Exception
             Console.WriteLine(Err.Source & vbCrLf & Err.Description)
