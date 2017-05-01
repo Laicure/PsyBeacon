@@ -1,5 +1,4 @@
 set nocount on
-use Darkhouse
 
 select
 [Username],
