@@ -53,8 +53,12 @@
                 If MasterLiszt.LongCount > 0 Then
                     Dim MasterFSCount As Integer = MasterLiszt.Count - 1
                     If MasterLiszt(MasterFSCount).Contains("<End>") Then
-                        My.Computer.FileSystem.DeleteFile(PsyLogs, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
-                        My.Computer.FileSystem.DeleteFile(Starteeed, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
+                        If My.Computer.FileSystem.FileExists(PsyLogs) Then
+                            My.Computer.FileSystem.DeleteFile(PsyLogs, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
+                        End If
+                        If My.Computer.FileSystem.FileExists(Starteeed) Then
+                            My.Computer.FileSystem.DeleteFile(Starteeed, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
+                        End If
                     End If
                 End If
 
@@ -185,7 +189,9 @@
             Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<End>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.000")
             MasterLiszt.Add(Loggg)
             My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
-            My.Computer.FileSystem.DeleteFile(Starteeed, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
+            If My.Computer.FileSystem.FileExists(Starteeed) Then
+                My.Computer.FileSystem.DeleteFile(Starteeed, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
+            End If
         End If
     End Sub
 
