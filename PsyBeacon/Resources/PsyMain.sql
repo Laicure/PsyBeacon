@@ -9,7 +9,7 @@ select
 [Start],
 iif(lead([Title]) over (partition by [Username] order by [Start], [Name])='<Start>', Null, [End]) as 'End',
 iif(lead([Title]) over (partition by [Username] order by [Start], [Name])='<Start>', Null, [Duration]) as 'dd:hh:mm:ss',
-RawSec
+iif([Title]='<End>', Null, RawSec) as 'RawSec'
 from (
 select
 iif(CHARINDEX('\', [Username])>0, REPLACE(SUBSTRING([Username], CHARINDEX('\', [Username]), LEN([Username])), '\', ''), [Username]) as 'UserName',
@@ -20,7 +20,7 @@ iif(CHARINDEX('\', [Username])>0, LEFT([Username], CHARINDEX('\', [Username]) - 
 [Start],
 [End],
 --http://www.sqlteam.com/article/working-with-time-spans-and-durations-in-sql-server
-rtrim(ElapsedSecs / 86400) + ':' +
+right('0' + rtrim(ElapsedSecs / 86400), 4) + ':' +
 right('0' + rtrim((ElapsedSecs % 86400) / 3600), 2) + ':' +
 right('0' + rtrim((ElapsedSecs % 3600) / 60), 2) + ':' +
 right('0' + rtrim(ElapsedSecs % 60), 2)
@@ -39,6 +39,7 @@ psy.WinTitle,
 psy.WinProcess,
 psy.TimeLogged as 'Start',
 lead(psy.TimeLogged) over (partition by psy.UserName order by psy.TimeLogged, psy.Name) as 'End'
+--'' as 'Elapsed Seconds'
 from PsyMain psy with (NoLock)
 ) xx
 ) yy
