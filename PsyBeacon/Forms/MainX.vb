@@ -76,7 +76,7 @@
 			If Not My.Computer.FileSystem.FileExists(Starteeed) Then
 				'Start Log
 				Dim logDate As DateTime = DateTime.UtcNow
-				Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<Start>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fff")
+				Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<Start>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fffffff")
 				MasterLiszt.Add(Loggg)
 				My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
 
@@ -100,7 +100,7 @@
 			Locked = True
 
 			Dim logDate As DateTime = DateTime.UtcNow
-			Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<PC Locked>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fff")
+			Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<PC Locked>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fffffff")
 			MasterLiszt.Add(Loggg)
 			My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
 
@@ -111,7 +111,7 @@
 		ElseIf e.Reason = Microsoft.Win32.SessionSwitchReason.SessionUnlock Then
 			Locked = False
 			Dim logDate As DateTime = DateTime.UtcNow
-			Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & IIf(LockedElapsed, "<Start>", "<PC Unlocked>").ToString & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fff")
+			Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & IIf(LockedElapsed, "<Start>", "<PC Unlocked>").ToString & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fffffff")
 			MasterLiszt.Add(Loggg)
 			My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
 			If LockedElapsed Then
@@ -132,7 +132,7 @@
 		If Not String.IsNullOrWhiteSpace(WinTit) Then
 			If Not PrevWinTit = WinTit And Not WinTit = Me.Text And Not (ProcessWhiteList.Contains(WinProc)) Then
 				Dim logDate As DateTime = DateTime.UtcNow
-				Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & WinTit & vbTab & WinProc & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fff")
+				Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & WinTit & vbTab & WinProc & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fffffff")
 				MasterLiszt.Add(Loggg)
 				My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
 
@@ -147,7 +147,7 @@
 				If IdleMode >= FIdle And IdleMode < SIdle Then
 					If Not FIdled Then
 						Dim logDate As DateTime = DateTime.UtcNow
-						Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<Idle>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fff")
+						Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<Idle>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fffffff")
 						MasterLiszt.Add(Loggg)
 						My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
 
@@ -186,7 +186,7 @@
 			timMain.Enabled = False
 
 			Dim logDate As DateTime = DateTime.UtcNow
-			Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<End>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fff")
+			Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<End>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fffffff")
 			MasterLiszt.Add(Loggg)
 			My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
 			If My.Computer.FileSystem.FileExists(Starteeed) Then
@@ -210,7 +210,7 @@
 		timMain.Enabled = False
 		timLocked.Enabled = False
 		Dim logDate As DateTime = DateTime.UtcNow
-		Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<End>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fff")
+		Dim Loggg As String = Uzer & Format(logDate, "yyyyMMddHHmmssffff") & vbTab & Uzer & vbTab & Namm & vbTab & "<End>" & vbTab & "<App>" & vbTab & Format(logDate, "yyyy-MM-dd HH:mm:ss.fffffff")
 		My.Computer.FileSystem.WriteAllText(PsyLogs, Loggg & vbCrLf, True)
 	End Sub
 
