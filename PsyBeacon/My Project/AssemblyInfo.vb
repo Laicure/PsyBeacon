@@ -1,7 +1,6 @@
-﻿Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
+﻿Imports System.Reflection
 Imports System.Resources
+Imports System.Runtime.InteropServices
 
 ' General Information about an assembly is controlled through the following
 ' set of attributes. Change these attribute values to modify the information
@@ -9,17 +8,17 @@ Imports System.Resources
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Runtime Client")> 
-<Assembly: AssemblyDescription("Psychic Beacon")> 
-<Assembly: AssemblyCompany("CodeMock")> 
-<Assembly: AssemblyProduct("PsyBeacon")> 
-<Assembly: AssemblyCopyright("Copyright © 2017")> 
-<Assembly: AssemblyTrademark("Laicurè Leviarè")> 
+<Assembly: AssemblyTitle("Runtime Client")>
+<Assembly: AssemblyDescription("Psychic Beacon")>
+<Assembly: AssemblyCompany("CodeMock")>
+<Assembly: AssemblyProduct("PsyBeacon")>
+<Assembly: AssemblyCopyright("Copyright © 2017")>
+<Assembly: AssemblyTrademark("Laicurè Leviarè")>
 
-<Assembly: ComVisible(False)> 
+<Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("0c97b796-e290-4cb8-9d19-832203fe5259")> 
+<Assembly: Guid("0c97b796-e290-4cb8-9d19-832203fe5259")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -32,5 +31,5 @@ Imports System.Resources
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.0.*")> 
-<Assembly: NeutralResourcesLanguageAttribute("en")> 
+<Assembly: AssemblyVersion("1.0.*")>
+<Assembly: NeutralResourcesLanguageAttribute("en")>

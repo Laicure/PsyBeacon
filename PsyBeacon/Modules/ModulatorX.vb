@@ -1,14 +1,18 @@
 ﻿Module ModulatorX
+
 #Region "Global Declarations"
+
 	Friend sqlCon As String = "Integrated Security=False; Data Source=; Initial Catalog=; User ID=; Password="
 	Friend Uzer As String = Environment.UserDomainName & "\" & Environment.UserName
 	Friend Namm As String = ""
 	Friend MasterLiszt As New List(Of String)
 
 	Friend ProcessWhiteList() As String = {""}
+
 #End Region
 
 #Region "Get Window Title; stackoverflow.com/questions/115868/how-do-i-get-the-title-of-the-current-active-window-using-c"
+
 	<Runtime.InteropServices.DllImport("user32.dll", SetLastError:=True)> Private Function GetForegroundWindow() As IntPtr
 	End Function
 
@@ -26,9 +30,11 @@
 			Return Nothing
 		End If
 	End Function
+
 #End Region
 
 #Region "Get Window Process Name; stackoverflow.com/questions/16680356/get-the-process-name-of-the-window-that-is-currently-active-and-in-focus-using-v"
+
 	<Runtime.InteropServices.DllImport("user32.dll", SetLastError:=True)> Private Function GetWindowThreadProcessId(ByVal hwnd As IntPtr, ByRef lpdwProcessId As Integer) As Integer
 	End Function
 
@@ -39,9 +45,11 @@
 
 		Return Process.GetProcessById(ProcID).ProcessName
 	End Function
+
 #End Region
 
 #Region "Last Input; http://stackoverflow.com/questions/22878502/detecting-mouse-moves-and-key-strokes-in-vb-net"
+
 	<Runtime.InteropServices.StructLayout(Runtime.InteropServices.LayoutKind.Sequential)> Structure LASTINPUTINFO
 		<Runtime.InteropServices.MarshalAs(Runtime.InteropServices.UnmanagedType.U4)> Friend cbSize As Integer
 		<Runtime.InteropServices.MarshalAs(Runtime.InteropServices.UnmanagedType.U4)> Friend dwTime As Integer
@@ -52,6 +60,7 @@
 
 	Dim idletime As Long
 	Dim lastInputInf As New LASTINPUTINFO()
+
 	Friend Function GetLastInputTime() As Long
 		idletime = 0
 		lastInputInf.cbSize = Runtime.InteropServices.Marshal.SizeOf(lastInputInf)
@@ -70,8 +79,10 @@
 #End Region
 
 #Region "http://www.pinvoke.net/default.aspx/user32.lockworkstation"
+
 	<Runtime.InteropServices.DllImport("user32.dll", SetLastError:=True)> Friend Function LockWorkStation() As Boolean
 	End Function
+
 #End Region
 
 End Module
